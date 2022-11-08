@@ -3,19 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <title>customer form</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
    <h2>Register as new customer</h2>
 
-  <form action="api/customers" method="post" >
+  <!-- <form action="api/customers" method="post" > -->
     <h3>
-       Name  <input type="text" name="name" /><br/>
-       Address <input type="text" name="address" /><br/>
-       Phone Number <input type="text" name="phone-number" /><br/>
-        <input type="submit" value="Submit" />
+       Name  <input type="text" id="name" /><br/>
+       Address <input type="text" id="address" /><br/>
+       Phone Number <input type="text" id="phone-number" /><br/>
+        <input type="button" value="Send" id="send"/>
+        <input type="button" value="Query Customer ID" id="query"/>
+        <p>
+         Query ID  <input type="text" id="cid" value="1"/><br/>
+         <p>
+         <div id="customerData"></div>
     </h3>
-</form>
-
+<!-- </form> -->
+<script>
+   function rsData(data){
+	    var st=JSON.stringify(data);
+	    alert(st);
+	    var s=data.name+" | "+data.address+" | "+ data.phoneNumber;
+        $("#customerData").text(s);
+   }
+   function query(){
+	   var value=$("#cid").val();
+	   $.get("api/customers/"+value,rsData);
+	   
+   }
+   function result(data){
+        alert("customer id "+data);
+   }
+   function send(){
+     //alert("send");
+	 $.post("api/customers",{"name":$("#name").val(),"address":$("#address").val(),"phone-number":$("#phone-number").val()},result);
+   }
+   function start(){
+	   $("#send").click(send);
+	   $("#query").click(query);
+   }
+   $(document).ready(start);
+</script>
    
 </body>
 </html>

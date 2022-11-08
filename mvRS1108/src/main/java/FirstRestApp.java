@@ -11,6 +11,6 @@ public class FirstRestApp extends Application
 {
     @Override
     public Set<Class<?>> getClasses() {
-        return new HashSet(Arrays.asList(CustomerRestService.class));
+        return new HashSet(Arrays.asList(CustomerRestService.class,StudentRestService.class));
     }
 }
