@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Coffee</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+	<form>
+		咖啡:<input type="text" id="coffee" value="Extra Espresso" /> <br />
+		售價:<input type="text" id="sale" value="200" /><br />
+		總量:<input type="text" id="total" value="10" /><br />
+		供應商:<input type="text"	id="supplier" value="150" /><br />
+		價格:<input type="text" id="price" value="300" /><br /> 
+			<input type="submit" value="Save" />
+			<input type="button" value="coffees" />
+	</form>
+	<div id="msg"></div>
+    <script>
+        function query(e){
+        	e.preventDefault();
+        	$.get("coffee",display);
+        }
+        function display(data){
+             $("#mydata").html(data);
+        }
+        function send(evt){
+            evt.preventDefault();
+            var obj={};
+            obj.cofName=$("#coffee").val();
+            obj.supId=parseInt($("#supplier").val());
+            obj.price=parseFloat($("#price").val());
+            obj.sales=parseInt($("#sale").val());
+            obj.total=parseInt($("#total").val());
+            
+            $.ajax({
+                url:'api/coffee/post',
+                type :'post',
+                data : JSON.stringify(obj),
+                contentType:"application/json",
+                cache: false,
+                datatype:"text/html",
+               success : function(data) 
+               {            	  
+                   $("#msg").html(data);
+               },error: function(data) 
+               {
+                  console.log('無法送出');
+               }
+         });
+        }
+        function start(){
+        	$('input[type=submit]').click(send);
+        	$('input[type=button]').click(query);
+        }
+        $(document).ready(start);
+    </script>
+</body>
+</html>
