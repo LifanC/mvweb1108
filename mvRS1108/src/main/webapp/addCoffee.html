@@ -14,10 +14,35 @@
 			id="supplier" value="150" /><br /> 價格:<input type="text"
 			id="price" value="300" /><br /> 
 			<input type="submit" value="Save" />
-			<input type="button" value="update" />
+			<input type="button" id="u1" value="update" />
+			<input type="button" id="d1" value="delete" />
 	</form>
 	<div id="msg"></div>
     <script>
+    function deletecoffee(e){
+    	e.preventDefault();
+    	 var obj={};
+         obj.cofName=$("#coffee").val();
+         obj.supId=parseInt($("#supplier").val());
+         obj.price=parseFloat($("#price").val());
+         obj.sales=parseInt($("#sale").val());
+         obj.total=parseInt($("#total").val());
+    	 $.ajax({
+    		 url:'api/coffee/delete',
+             type :'post',
+             data : JSON.stringify(obj),
+             contentType:"application/json",
+             cache: false,
+             datatype:"text/html",
+            success : function(data) 
+            {            	  
+                $("#msg").html(data);
+            },error: function(data) 
+            {
+               console.log('無法送出');
+            }
+      });
+    }
         function updateCoffee(e){
         	e.preventDefault();
         	 var obj={};
@@ -70,7 +95,8 @@
         }
         function start(){
         	$('input[type=submit]').click(send);
-        	$('input[type=button]').click(updateCoffee);
+        	$('#u1').click(updateCoffee);
+        	$('#d1').click(deletecoffee);
         }
         $(document).ready(start);
     </script>
