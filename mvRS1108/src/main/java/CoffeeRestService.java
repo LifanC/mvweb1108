@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,9 +15,28 @@ public class CoffeeRestService {
     @Path("/post")
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_HTML)
-    public String postCoffee(Coffee cf){
+    public String postCoffee(Coffee cf) throws SQLException{
         String result = "Record entered: "+ cf.toString();
         System.out.println(result);
-        return "OK";
+        CoffeeDAO dao=new CoffeeDAO();
+        int r=dao.InsertCoffee(cf);
+        if(r>0)
+            return "Insert OK";
+          else
+            return "Insert Failed";
+    }
+	@POST
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
+	public String updateCoffee(Coffee cf) throws SQLException{
+        String result = "Record entered: "+ cf.toString();
+        System.out.println(result);
+        CoffeeDAO dao=new CoffeeDAO();
+        int r=dao.updateCoffeeSales(cf);
+        if(r>0)
+          return "update OK";
+        else
+          return "update Failed";	
     }
 }

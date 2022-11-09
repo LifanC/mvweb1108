@@ -17,6 +17,31 @@
 	</form>
 	<div id="msg"></div>
     <script>
+    function updateCoffee(e){
+    	e.preventDefault();
+    	 var obj={};
+         obj.cofName=$("#coffee").val();
+         obj.supId=parseInt($("#supplier").val());
+         obj.price=parseFloat($("#price").val());
+         obj.sales=parseInt($("#sale").val());
+         obj.total=parseInt($("#total").val());
+    	 $.ajax({
+             url:'api/coffee/update',
+             type :'post',
+             data : JSON.stringify(obj),
+             contentType:"application/json",
+             cache: false,
+             datatype:"text/html",
+            success : function(data) 
+            {            	  
+                $("#msg").html(data);
+            },error: function(data) 
+            {
+               console.log('無法送出');
+            }
+      });
+    }
+    
         function query(e){
         	e.preventDefault();
         	$.get("coffee",display);
@@ -51,7 +76,7 @@
         }
         function start(){
         	$('input[type=submit]').click(send);
-        	$('input[type=button]').click(query);
+        	$('input[type=button]').click(updateCoffee);
         }
         $(document).ready(start);
     </script>
