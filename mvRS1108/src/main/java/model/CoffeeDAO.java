@@ -60,8 +60,8 @@ public class CoffeeDAO {
 		        
 		    }
 		    return 0;
-		}   
-
+		} 
+	
 	public int updateCoffeeSales(Coffee cf)
 		    throws SQLException {
 		    Connection con=null;
@@ -125,4 +125,55 @@ public class CoffeeDAO {
 		    }
 		    return 0;
 		}
+	
+	public int deleteCoffee(Coffee cf) throws SQLException {
+		    Connection con=null;
+		    PreparedStatement deleteStatement = null;
+		   
+
+		   
+
+		    String deleteSql =
+		        "delete from classicmodels.COFFEES where COF_NAME = ?";
+
+		    try {
+		         Class.forName("com.mysql.cj.jdbc.Driver");
+		         con =  DriverManager.getConnection("jdbc:mysql://localhost:3306/classicmodels?serverTimezone=Asia/Taipei","root","1234");
+		      
+		        con.setAutoCommit(false);
+		        deleteStatement = con.prepareStatement(deleteSql);     
+
+		        deleteStatement.setString(1, cf.getCofName());
+		            int r1=deleteStatement.executeUpdate();
+		            if(r1>0) {
+		               con.commit();
+		               return 1;
+		            }
+		            else {
+		               con.rollback();
+		               System.out.println("Transaction Failed");
+		               return 0;
+		            }
+		        
+		    } catch (Exception e ) {
+		        System.out.println(e.getMessage());
+		        if (con != null) {
+		            try {
+		                System.err.print("Transaction is being rolled back");
+		                con.rollback();
+		            } catch(SQLException excep) {
+		                System.out.println(e.getMessage());
+		            }
+		        }
+		    } finally {
+		    	
+		    	con.setAutoCommit(true);		       
+		        if (deleteStatement != null) {
+		        	deleteStatement.close();
+		        }
+		        
+		    }
+		    return 0;
+		}
+
 }
