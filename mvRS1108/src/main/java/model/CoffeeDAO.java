@@ -1,5 +1,6 @@
 package model;
 import java.sql.*;
+import java.util.*;
 
 public class CoffeeDAO {
 	public Connection getConnection() {
@@ -12,6 +13,35 @@ public class CoffeeDAO {
 		 }		
 		return cn;
 	}
+	public List<Coffee> getAll(){
+		List<Coffee> data=new ArrayList<>();
+		Connection cn=getConnection();
+		try {
+		    Statement st=cn.createStatement();
+		    String sql="select * from classicmodels.coffees";
+		    ResultSet rs=st.executeQuery(sql);
+		    while(rs.next()) {
+		    	String n=rs.getString("cof_name");
+		    	int sid=rs.getInt("sup_id");
+		    	double price=rs.getDouble("price");
+		    	int sa=rs.getInt("sales");
+		    	int tt=rs.getInt("total");
+		    	Coffee cf=new Coffee(n,sid,price,sa,tt);
+		    	data.add(cf);
+		    }
+		    
+		}catch(SQLException ex) {
+			System.out.println("getAll() SQL Error "+ex.getMessage());
+		}finally {
+			if(cn !=null) {
+			   try {	
+				cn.close();
+			   }catch(SQLException ex) {}
+			}
+		}
+		return data;
+	}
+	
 	public int InsertCoffee(Coffee cf)
 		    throws SQLException {
 		    Connection con=null;
@@ -129,12 +159,7 @@ public class CoffeeDAO {
 	public int deleteCoffee(Coffee cf) throws SQLException {
 		    Connection con=null;
 		    PreparedStatement deleteStatement = null;
-		   
-
-		   
-
-		    String deleteSql =
-		        "delete from classicmodels.COFFEES where COF_NAME = ?";
+		    String deleteSql = "delete from classicmodels.COFFEES where COF_NAME = ?";
 
 		    try {
 		         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -175,5 +200,4 @@ public class CoffeeDAO {
 		    }
 		    return 0;
 		}
-
 }

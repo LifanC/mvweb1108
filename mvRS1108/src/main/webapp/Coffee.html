@@ -13,36 +13,52 @@
 			type="text" id="total" value="10" /><br /> 供應商:<input type="text"
 			id="supplier" value="150" /><br /> 價格:<input type="text"
 			id="price" value="300" /><br /> 
+			<input type="button" id="getAll" value="get All Data" />
 			<input type="submit" value="Save" />
 			<input type="button" id="u1" value="update" />
-			<input type="button" id="d1" value="delete" />
+			<input type="button" id="d1" value="delete coffee" />
 	</form>
 	<div id="msg"></div>
+	<table border="1" style="width: 80%">
+     <thead>
+          <tr>
+               <th>Coffee Name</th>
+               <th>Supplier ID</th>             
+               <th>Price</th>
+               <th>Sales</th>
+               <th>Total</th>
+           </tr>
+     </thead>
+     <tbody id="tbody">
+     </tbody>
+    </table>
     <script>
-    function deletecoffee(e){
-    	e.preventDefault();
-    	 var obj={};
-         obj.cofName=$("#coffee").val();
-         obj.supId=parseInt($("#supplier").val());
-         obj.price=parseFloat($("#price").val());
-         obj.sales=parseInt($("#sale").val());
-         obj.total=parseInt($("#total").val());
-    	 $.ajax({
-    		 url:'api/coffee/delete',
-             type :'post',
-             data : JSON.stringify(obj),
-             contentType:"application/json",
-             cache: false,
-             datatype:"text/html",
-            success : function(data) 
-            {            	  
-                $("#msg").html(data);
-            },error: function(data) 
-            {
-               console.log('無法送出');
-            }
-      });
-    }
+        function getAllData(e){
+        	e.preventDefault();
+        	 $.ajax({
+                 url:'api/coffee/getAll',
+                 type :'get',
+                 cache: false,
+                 datatype:"application/json",
+                success : function(data) 
+                {
+                    $('#tbody').empty();      	  
+                	$.each(data, function (index, item) {
+                	     var eachrow = "<tr>"
+                	                 + "<td>" + item.cofName + "</td>"
+                	                 + "<td>" + item.supId + "</td>"
+                	                 + "<td>" + item.price + "</td>"
+                	                 + "<td>" + item.sales + "</td>"
+                	                 + "<td>" + item.total + "</td>"                
+                	                 + "</tr>";
+                	     $('#tbody').append(eachrow);
+                	});  
+                },error: function(data) 
+                {
+                   console.log('無法送出');
+                }
+          });
+        }
         function updateCoffee(e){
         	e.preventDefault();
         	 var obj={};
@@ -93,10 +109,35 @@
                }
          });
         }
+        function delCoffee(e){
+        	e.preventDefault();
+       	 var obj={};
+            obj.cofName=$("#coffee").val();
+            obj.supId=parseInt($("#supplier").val());
+            obj.price=parseFloat($("#price").val());
+            obj.sales=parseInt($("#sale").val());
+            obj.total=parseInt($("#total").val());
+       	 $.ajax({
+                url:'api/coffee/delete',
+                type :'post',
+                data : JSON.stringify(obj),
+                contentType:"application/json",
+                cache: false,
+                datatype:"text/html",
+               success : function(data) 
+               {            	  
+                   $("#msg").html(data);
+               },error: function(data) 
+               {
+                  console.log('無法送出');
+               }
+         });
+        }
         function start(){
         	$('input[type=submit]').click(send);
         	$('#u1').click(updateCoffee);
-        	$('#d1').click(deletecoffee);
+        	$('#d1').click(delCoffee);
+        	$('#getAll').click(getAllData);
         }
         $(document).ready(start);
     </script>
